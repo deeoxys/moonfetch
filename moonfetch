@@ -1,0 +1,74 @@
+#!/bin/bash
+
+getUser() {
+    user="$(whoami)"
+}
+
+getHostname() {
+    hostname="$(hostname)"
+}
+
+getUptime() {
+    uptime=""
+    IFS=. read -r sec _ < /proc/uptime
+
+    days=$((sec / 60 / 60 / 24))
+    hours=$((sec / 60 / 60 % 24))
+    mins=$((sec / 60 % 60))
+
+    if [ $days -gt 0 ]; then
+        uptime+="$days days, "
+    fi
+    
+    if [ $hours -gt 0 ]; then
+        uptime+="$hours hours, "
+    fi
+    
+    if [ $mins -gt 0 ]; then
+        uptime+="$mins mins"
+    fi
+}
+
+getOS() {
+    os="$(lsb_release -ds)"
+}
+
+getCPU() {
+    cpu="$(grep -i -m 1 'model name' /proc/cpuinfo | cut -f3- -d' ')"
+}
+
+getRAM() {
+    ram="$(grep -i MemTotal /proc/meminfo | awk '{print $2/1024}')"
+}
+
+getPackages() {
+    packages="$(dpkg --list | wc -l)"
+}
+
+getShell() {
+    shell="$(basename $SHELL)"
+}
+
+getUser
+getHostname
+getUptime
+
+getOS
+getCPU
+getRAM
+
+getPackages
+getShell
+
+fetch() {
+    echo -e "\n     ~ moonfetch\n"
+    echo -e "\t    _.._       user\t  ::  \tme@r333mo"
+    echo -e "\t .' .-'\`       os\t  ::  \t$os"
+    echo -e "\t/  /           uptime\t  ::  \t$uptime"
+    echo -e "\t|  |           cpu\t  ::  \t$cpu"
+    echo -e "\t\\  '.___.;     ram\t  ::  \t$ram mb"
+    echo -e "\t '._  _.'      pkgs\t  ::  \t$packages"
+    echo -e "\t    \`\`         shell\t  ::  \t$shell"
+}
+
+fetch
