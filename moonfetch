@@ -39,6 +39,7 @@ getCPU() {
 
 getRAM() {
     ram="$(grep -i MemTotal /proc/meminfo | awk '{print $2/1024}')"
+    ram+="mb"
 }
 
 getPackages() {
@@ -66,7 +67,7 @@ fetch() {
     echo -e "\t .' .-'\`       os\t  ::  \t$os"
     echo -e "\t/  /           uptime\t  ::  \t$uptime"
     echo -e "\t|  |           cpu\t  ::  \t$cpu"
-    echo -e "\t\\  '.___.;     ram\t  ::  \t$ram mb"
+    echo -e "\t\\  '.___.;     ram\t  ::  \t$ram"
     echo -e "\t '._  _.'      pkgs\t  ::  \t$packages"
     echo -e "\t    \`\`         shell\t  ::  \t$shell"
 }
