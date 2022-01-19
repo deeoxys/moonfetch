@@ -38,8 +38,7 @@ getCPU() {
 }
 
 getRAM() {
-    ram="$(grep -i MemTotal /proc/meminfo | awk '{print $2/1024}')"
-    ram+="mb"
+    ram="$(grep -i MemTotal /proc/meminfo | awk '{print $2/1024}')mb"
 }
 
 getPackages() {
