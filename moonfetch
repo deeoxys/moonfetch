@@ -1,44 +1,36 @@
 #!/bin/bash
 
 getUser() {
-    user="$(whoami)"
+    user="$(whoami | tr '[:upper:]' '[:lower:]')"
 }
 
 getHostname() {
-    hostname="$(hostname)"
+    hostname="$(hostname | tr '[:upper:]' '[:lower:]')"
 }
 
 getUptime() {
-    uptime=""
-    IFS=. read -r sec _ < /proc/uptime
-
-    days=$((sec / 60 / 60 / 24))
-    hours=$((sec / 60 / 60 % 24))
-    mins=$((sec / 60 % 60))
-
-    if [ $days -gt 0 ]; then
-        uptime+="$days days, "
-    fi
-    
-    if [ $hours -gt 0 ]; then
-        uptime+="$hours hours, "
-    fi
-    
-    if [ $mins -gt 0 ]; then
-        uptime+="$mins mins"
-    fi
+    uptime="$(uptime -p | sed 's/up //' | tr '[:upper:]' '[:lower:]')"
 }
 
 getOS() {
-    os="$(lsb_release -ds)"
+    os="$(lsb_release -ds | tr '[:upper:]' '[:lower:]')"
 }
 
 getCPU() {
-    cpu="$(grep -i -m 1 'model name' /proc/cpuinfo | cut -f3- -d' ')"
+    cpu="$(grep -i -m 1 'model name' /proc/cpuinfo | cut -f3- -d' ' | tr '[:upper:]' '[:lower:]')"
 }
 
 getRAM() {
-    ram="$(grep -i MemTotal /proc/meminfo | awk '{print $2/1024}')mb"
+    ram_avail="$(grep -i MemAvailable /proc/meminfo | awk '{print $2}')"
+    ram_total="$(grep -i MemTotal /proc/meminfo | awk '{print $2}')"
+    ram_used=$((ram_total - ram_avail))
+    ((ram_used /= 1024))
+    ((ram_avail /= 1024))
+    ((ram_total /= 1024))
+    ram_percnt=$((100*ram_used/ram_total))
+    ram="$ram_used"
+    ram+="mb / $ram_total"
+    ram+="mb $ram_percnt%"
 }
 
 getPackages() {
@@ -46,7 +38,7 @@ getPackages() {
 }
 
 getShell() {
-    shell="$(basename $SHELL)"
+    shell="$(basename $SHELL | tr '[:upper:]' '[:lower:]')"
 }
 
 getUser
