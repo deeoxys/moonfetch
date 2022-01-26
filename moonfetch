@@ -21,16 +21,15 @@ getCPU() {
 }
 
 getRAM() {
-    ram_avail="$(grep -i MemAvailable /proc/meminfo | awk '{print $2}')"
-    ram_total="$(grep -i MemTotal /proc/meminfo | awk '{print $2}')"
-    ram_used=$((ram_total - ram_avail))
-    ((ram_used /= 1024))
-    ((ram_avail /= 1024))
-    ((ram_total /= 1024))
-    ram_percnt=$((100*ram_used/ram_total))
-    ram="$ram_used"
-    ram+="mb / $ram_total"
-    ram+="mb $ram_percnt%"
+    ram_use=$(free -m)
+    IFS=$'\n' read -rd '' -a ram_use_arr <<< "$ram_use"
+    ram_use="${ram_use_arr[1]}"
+    ram_use=$(echo "$ram_use" | tr -s " ")
+    IFS=' ' read -ra ram_use_arr <<< "$ram_use"
+    total_ram="${ram_use_arr[1]}"
+    ram_use="${ram_use_arr[2]}"
+    ram_percnt="$((100*ram_use/total_ram))"
+    ram="${ram_use}mb / ${total_ram}mb ${ram_percnt}%"
 }
 
 getPackages() {
