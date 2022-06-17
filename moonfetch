@@ -52,7 +52,7 @@ getPackages
 getShell
 
 fetch() {
-    echo -e "\n     ~ moonfetch\n"
+    echo -e "     ~ moonfetch\n"
     echo -e "\t    _.._       user\t  ::  \t$user@$hostname"
     echo -e "\t .' .-'\`       os\t  ::  \t$os"
     echo -e "\t/  /           uptime\t  ::  \t$uptime"
